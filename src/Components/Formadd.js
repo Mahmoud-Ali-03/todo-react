@@ -33,7 +33,12 @@ export default function Formadd() {
           value={titlefield}
           onChange={handeltitle}
         />
-        <Button variant="contained" className="addbtn" onClick={handeladd}>
+        <Button
+          variant="contained"
+          className="addbtn"
+          onClick={handeladd}
+          style={{ padding: "12px 5px", fontSize: "18px" }}
+        >
           إضافة
         </Button>
       </div>
