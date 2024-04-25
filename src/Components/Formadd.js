@@ -3,17 +3,25 @@ import Button from "@mui/material/Button";
 import { useState } from "react";
 import { TaskesList } from "../context/Taskscontext";
 import { useContext } from "react";
+import { v4 as uuidv4 } from "uuid";
 export default function Formadd() {
   const [titlefield, setTitlefield] = useState("");
   let handeltitle = (event) => {
     setTitlefield(event.target.value);
   };
-  let listcornt = useContext(TaskesList);
-  let tasks = listcornt.map((task) => {
-    return task;
-  });
+  let [newtask, setNewtask] = useContext(TaskesList);
+
   let handeladd = () => {
-    console.log(tasks);
+    const addtask = {
+      id: uuidv4(),
+      title: titlefield,
+      body: "",
+      isComplete: false,
+    };
+    const updateadd = [...newtask, addtask];
+    setNewtask(updateadd);
+    localStorage.setItem("tasks", JSON.stringify(updateadd));
+    setTitlefield("");
   };
   return (
     <>
@@ -38,6 +46,7 @@ export default function Formadd() {
           className="addbtn"
           onClick={handeladd}
           style={{ padding: "12px 5px", fontSize: "18px" }}
+          disabled={titlefield.length == 0}
         >
           إضافة
         </Button>
