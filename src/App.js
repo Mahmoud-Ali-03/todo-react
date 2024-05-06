@@ -11,6 +11,8 @@ import "./App.css";
 import Typography from "@mui/material/Typography";
 import { v4 as uuidv4 } from "uuid";
 import { useState } from "react";
+
+import { Tostprovider } from "./context/TostContext";
 function App() {
   let tasksHub = [
     {
@@ -58,30 +60,32 @@ function App() {
   const [newtask, setNewtask] = useState(tasksHub);
   return (
     <ThemeProvider theme={themcolor}>
-      <div className="App">
-        <>
-          <Container maxWidth="sm">
-            <TaskesList.Provider value={[newtask, setNewtask]}>
-              <Box
-                sx={{
-                  bgcolor: "#cfe8fc",
-                  padding: "20px 5px",
-                  marginTop: "80px",
-                  maxHeight: "80vh",
-                  overflow: "auto",
-                }}
-              >
-                <Typography variant="h2" component="h2">
-                  قائمة المهام
-                </Typography>
-                <Divider />
-                <TasksList />
-                <Formadd />
-              </Box>
-            </TaskesList.Provider>
-          </Container>
-        </>
-      </div>
+      <Tostprovider>
+        <div className="App">
+          <>
+            <Container maxWidth="sm">
+              <TaskesList.Provider value={[newtask, setNewtask]}>
+                <Box
+                  sx={{
+                    bgcolor: "#cfe8fc",
+                    padding: "20px 5px",
+                    marginTop: "80px",
+                    maxHeight: "80vh",
+                    overflow: "auto",
+                  }}
+                >
+                  <Typography variant="h2" component="h2">
+                    قائمة المهام
+                  </Typography>
+                  <Divider />
+                  <TasksList />
+                  <Formadd />
+                </Box>
+              </TaskesList.Provider>
+            </Container>
+          </>
+        </div>
+      </Tostprovider>
     </ThemeProvider>
   );
 }

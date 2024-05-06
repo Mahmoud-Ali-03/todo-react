@@ -1,0 +1,8 @@
+.block-task{
+    transition: 0.5s all;
+    padding: 10px;
+    cursor: pointer;
+}
+.block-task:hover{
+    padding: 20px 10px!important;
+}

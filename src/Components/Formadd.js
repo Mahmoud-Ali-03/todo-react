@@ -4,13 +4,14 @@ import { useState } from "react";
 import { TaskesList } from "../context/Taskscontext";
 import { useContext } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { useTost } from "../context/TostContext";
 export default function Formadd() {
   const [titlefield, setTitlefield] = useState("");
   let handeltitle = (event) => {
     setTitlefield(event.target.value);
   };
   let [newtask, setNewtask] = useContext(TaskesList);
-
+  const { showsnakhide } = useTost();
   let handeladd = () => {
     const addtask = {
       id: uuidv4(),
@@ -22,6 +23,7 @@ export default function Formadd() {
     setNewtask(updateadd);
     localStorage.setItem("tasks", JSON.stringify(updateadd));
     setTitlefield("");
+    showsnakhide("The Task added sucsses", "success");
   };
   return (
     <>
