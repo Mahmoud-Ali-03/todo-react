@@ -1,7 +1,6 @@
-import { TaskesList } from "../context/Taskscontext";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Btndone from "./Btndone";
 import Btnedite from "./Btnedite";
 import Btndelete from "./Btndelete";
@@ -15,18 +14,23 @@ import DialogContent from "@mui/material/DialogContent";
 import Stack from "@mui/material/Stack";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useTost } from "../context/TostContext";
+import { useTasks, useTaskdispatch } from "../context/Taskscontext";
 export default function TasksList() {
   const { showsnakhide } = useTost();
   const [alignment, setAlignment] = useState("all");
-  let [newtask, setNewtask] = useContext(TaskesList);
+
+  const { newtask } = useTasks();
+  const { dispatch } = useTaskdispatch();
   const [open, setOpen] = useState(false);
   const [openDel, setOpendel] = useState(false);
   const [currentTask, setCurrentTask] = useState(null);
+  const [curenttasktitle, setCurenttasktitle] = useState("");
   const [fieldsTask, setFieldsTask] = useState({ title: "", details: "" });
   const handelopenedit = (task) => {
     setOpen(true);
     setFieldsTask({ title: task.title, details: task.body });
     setCurrentTask(task);
+    setCurenttasktitle(task.title);
   };
   const handleClose = () => {
     setOpen(false);
@@ -40,31 +44,27 @@ export default function TasksList() {
   const delhandelopen = (e) => {
     setCurrentTask(e);
     setOpendel(true);
+    setCurenttasktitle(e.title);
   };
   const delClose = () => {
     setOpendel(false);
   };
 
   function handeldel() {
-    const taskdel = newtask.filter((t) => {
-      return t.id !== currentTask.id;
-    });
-    setNewtask(taskdel);
-    localStorage.setItem("tasks", JSON.stringify(taskdel));
+    dispatch({ type: "delet", payload: { idtask: currentTask.id } });
     setOpendel(false);
     showsnakhide("task Deleted", "success");
   }
 
   function handeleditclick() {
-    const taskuptodate = newtask.map((t) => {
-      if (t.id == currentTask.id) {
-        return { ...t, title: fieldsTask.title, body: fieldsTask.details };
-      } else {
-        return t;
-      }
+    dispatch({
+      type: "edit",
+      payload: {
+        titletask: fieldsTask.title,
+        detailstask: fieldsTask.details,
+        idtask: currentTask.id,
+      },
     });
-    setNewtask(taskuptodate);
-    localStorage.setItem("tasks", JSON.stringify(taskuptodate));
     setOpen(false);
     showsnakhide("Task edited successfly", "success");
   }
@@ -141,8 +141,7 @@ export default function TasksList() {
     );
   });
   useEffect(() => {
-    const getfromstorg = JSON.parse(localStorage.getItem("tasks"));
-    setNewtask(getfromstorg);
+    dispatch({ type: "get" });
   }, []);
 
   return (
@@ -152,7 +151,7 @@ export default function TasksList() {
         onClose={delClose}
         style={{ width: "90%!important", direction: "rtl" }}
       >
-        <DialogTitle>حذف المهمة</DialogTitle>
+        <DialogTitle>حذف المهمة {curenttasktitle}</DialogTitle>
         <DialogContent>
           <Typography>انت الأن تقوم بحذف المهمة</Typography>
         </DialogContent>
@@ -168,7 +167,7 @@ export default function TasksList() {
         onClose={handleClose}
         style={{ width: "90%!important", direction: "rtl" }}
       >
-        <DialogTitle>تعديل </DialogTitle>
+        <DialogTitle>تعديل {curenttasktitle}</DialogTitle>
         <DialogContent>
           <Stack spacing={2}>
             <TextField

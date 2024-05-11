@@ -3,7 +3,6 @@ import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { red, green } from "@mui/material/colors";
-import { TaskesList } from "./context/Taskscontext";
 import TasksList from "./Components/TasksList";
 import { arEG } from "@mui/material/locale";
 import Formadd from "./Components/Formadd";
@@ -11,7 +10,7 @@ import "./App.css";
 import Typography from "@mui/material/Typography";
 import { v4 as uuidv4 } from "uuid";
 import { useState } from "react";
-
+import Tasksprovider from "./context/Taskscontext";
 import { Tostprovider } from "./context/TostContext";
 function App() {
   let tasksHub = [
@@ -64,7 +63,7 @@ function App() {
         <div className="App">
           <>
             <Container maxWidth="sm">
-              <TaskesList.Provider value={[newtask, setNewtask]}>
+              <Tasksprovider>
                 <Box
                   sx={{
                     bgcolor: "#cfe8fc",
@@ -81,7 +80,7 @@ function App() {
                   <TasksList />
                   <Formadd />
                 </Box>
-              </TaskesList.Provider>
+              </Tasksprovider>
             </Container>
           </>
         </div>
